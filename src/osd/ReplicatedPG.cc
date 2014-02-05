@@ -9632,13 +9632,13 @@ int ReplicatedPG::recover_backfill(
   }
   dout(10) << "possible new_last_backfill at " << new_last_backfill << dendl;
 
-  /* If last_backfill is snapdir, we know that head necessarily cannot exist,
-   * therefore it's safe to bump the snap up to NOSNAP.  This is necessary
+  /* If last_backfill is head, we know that head necessarily cannot exist,
+   * therefore it's safe to bump the snap up to SNAPDIR.  This is necessary
    * since we need avoid having SNAPDIR backfilled and HEAD not backfilled
    * since a transaction on HEAD might change SNAPDIR
    */
-  if (new_last_backfill.is_snapdir())
-    new_last_backfill = new_last_backfill.get_head();
+  if (new_last_backfill.is_head())
+    new_last_backfill = new_last_backfill.get_snapdir();
   if (last_backfill_started.is_snapdir())
     last_backfill_started = last_backfill_started.get_head();
 
