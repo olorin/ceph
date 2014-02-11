@@ -246,6 +246,31 @@ public:
     Mutex::Locker l(monc_lock);
     _sub_unwant(what);
   }
+  version_t sub_wanted(string what) {
+    Mutex::Locker l(monc_lock);
+    map<string,ceph_mon_subscribe_item>::iterator i =
+        sub_have.find(what);
+    if (i != sub_have.end())
+      return i->second.start;
+    else
+      return 0;
+  }
+  /**
+   * Increase the requested subscription start point. If you do increase
+   * the value, apply the passed-in flags as well; otherwise do nothing.
+   */
+  bool sub_want_increment(string what, version_t start, unsigned flags) {
+    Mutex::Locker l(monc_lock);
+    map<string,ceph_mon_subscribe_item>::iterator i =
+            sub_have.find(what);
+    if (i == sub_have.end() || i->second.start < start) {
+      ceph_mon_subscribe_item& item = i[what];
+      item.start = start;
+      item.flags = flags;
+      return true;
+    }
+    return false;
+  }
   
   KeyRing *keyring;
   RotatingKeyRing *rotating_secrets;
