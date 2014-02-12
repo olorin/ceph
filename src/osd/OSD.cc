@@ -6025,6 +6025,7 @@ void OSD::handle_pg_create(OpRequestRef op)
   }
 
   maybe_update_heartbeat_peers();
+  monc->sub_got("osd_pg_creates", 0);
 }
 
 

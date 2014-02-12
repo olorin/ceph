@@ -264,7 +264,7 @@ public:
     map<string,ceph_mon_subscribe_item>::iterator i =
             sub_have.find(what);
     if (i == sub_have.end() || i->second.start < start) {
-      ceph_mon_subscribe_item& item = i[what];
+      ceph_mon_subscribe_item& item = sub_have[what];
       item.start = start;
       item.flags = flags;
       return true;
