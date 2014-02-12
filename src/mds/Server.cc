@@ -2818,7 +2818,11 @@ void Server::handle_client_readdir(MDRequest *mdr)
 
   // does the frag exist?
   if (diri->dirfragtree[fg.value()] != fg) {
-    frag_t newfg = diri->dirfragtree[fg.value()];
+    frag_t newfg;
+    if (offset_str.empty())
+      newfg = diri->dirfragtree[fg.value()];
+    else
+      newfg = diri->pick_dirfrag(offset_str);
     dout(10) << " adjust frag " << fg << " -> " << newfg << " " << diri->dirfragtree << dendl;
     fg = newfg;
     offset_str.clear();
