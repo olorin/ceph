@@ -113,3 +113,12 @@ LogEvent *LogEvent::decode_event(bufferlist& bl, bufferlist::iterator& p, __u32 
   return le;
 }
 
+void LogEvent::dump(Formatter *f)
+{
+  f->open_object_section("log_event");
+  f->dump_unsigned("type", _type);
+  f->dump_unsigned("start_off", _start_off);
+  f->dump_unsigned("stamp_sec", stamp.tv.tv_sec);
+  f->dump_unsigned("stamp_nsec", stamp.tv.tv_nsec);
+  f->close_section();
+}
